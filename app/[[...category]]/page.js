@@ -2,30 +2,45 @@ import React from "react"
 import HomeContainer from "@/containers/home"
 import Movies from '@/mocks/movies.json'
 
+
 const options = {
   method: 'GET',
   headers: {
     accept: 'application/json',
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3OWFlYjJmN2MwYjQxNTVjYjc0NThlODBlMTMxNzU3NiIsInN1YiI6IjY1NjcxMTIxYTM0OTExMDEzOGU2YTM0MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.a4s-qtyrQrY1i2cv1C8H8Ehcjd9oHjaOqbdkv7QYhOY`
+    Authorization: `${process.env.API_KEY}`
   }
 };
+
+// console.log('process.env.API_KEY :>> ', process.env.API_KEY);
+
 const API_URL = 'https://api.themoviedb.org/3'
+
 const getTopRatedMovies = async () => {
-  const res = await fetch(`${API_URL}/movie/top_rated?language=en-US&page=1`,options)
-  return res.json();
+  return await fetch(`${API_URL}/movie/top_rated?language=en-US&page=1`,options)
+  .then(response => response.json())
+}
+const getPopularMovies = async () => {
+  return await fetch(`${API_URL}/movie/popular?language=en-US&page=1`,options)
+  .then(response => response.json())
 }
 
 async function Home({ params }) {
   let selectedCategory;
-  const topRatedMovies = await getTopRatedMovies()
+
+  const topRatedPromise = getTopRatedMovies()
+  const popularPromise = getPopularMovies()
+
+  const [{results: topRatedMovies}, { results: popularMovies }] = 
+  await Promise.all([topRatedPromise, popularPromise])
   
   if(params.category?.length > 0) {
     selectedCategory = true;
   }
-  console.log('topRatedMovies :>> ', topRatedMovies);
+  // console.log('popularMovies :>> ', popularMovies);
   return (
     <HomeContainer 
-      // popularMovies={popularMovies}
+      topRatedMovies={topRatedMovies}
+      popularMovies={popularMovies}
       selectedCategory={{
         id: params.category?.[0] ?? '',
         movies: selectedCategory ? Movies.results.slice(0,7) : []

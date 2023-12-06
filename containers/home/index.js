@@ -16,7 +16,7 @@ function HomeContainer({topRatedMovies = [], popularMovies = [], selectedCategor
         />
       )}
       <MoviesSection title='Top Rated Movie' movies={topRatedMovies.slice(1,7)}/>
-      <MoviesSection title='Popular Movies' movies={popularMovies.slice(7,13)}/>
+      <MoviesSection title='Popular Movie' movies={popularMovies.slice(7,13)}/>
     </div>
   );
 }

@@ -15,7 +15,7 @@ function HomeContainer({topRatedMovies = [], popularMovies = [], selectedCategor
           title={Genres.genres.find((genre) => `${genre.id}` === selectedCategory.id)?.name} movies={selectedCategory.movies}
         />
       )}
-      <MoviesSection title='Top Rated Movies' movies={topRatedMovies.slice(1,7)}/>
+      <MoviesSection title='Top Rated Movie' movies={topRatedMovies.slice(1,7)}/>
       <MoviesSection title='Popular Movies' movies={popularMovies.slice(7,13)}/>
     </div>
   );

@@ -1,49 +1,35 @@
 import React from "react"
 import HomeContainer from "@/containers/home"
-import Movies from '@/mocks/movies.json'
+import { 
+  getTopRatedMovies,
+  getPopularMovies,
+  getCategories,
+  getSingleCategory  
+} from "@/services/movie";
 
-
-const options = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization: `${process.env.API_KEY}`
-  }
-};
-
-// console.log('process.env.API_KEY :>> ', process.env.API_KEY);
-
-const API_URL = 'https://api.themoviedb.org/3'
-
-const getTopRatedMovies = async () => {
-  return await fetch(`${API_URL}/movie/top_rated?language=en-US&page=1`,options)
-  .then(response => response.json())
-}
-const getPopularMovies = async () => {
-  return await fetch(`${API_URL}/movie/popular?language=en-US&page=1`,options)
-  .then(response => response.json())
-}
 
 async function Home({ params }) {
   let selectedCategory;
-
+  
   const topRatedPromise = getTopRatedMovies()
   const popularPromise = getPopularMovies()
-
-  const [{results: topRatedMovies}, { results: popularMovies }] = 
-  await Promise.all([topRatedPromise, popularPromise])
+  const categoryPromise = getCategories()
+  
+  const [{results: topRatedMovies}, { results: popularMovies }, { genres: categories }] = 
+  await Promise.all([topRatedPromise, popularPromise, categoryPromise])
   
   if(params.category?.length > 0) {
-    selectedCategory = true;
+    const {results} = await getSingleCategory(params.category[0]);
+    selectedCategory = results
   }
-  // console.log('popularMovies :>> ', popularMovies);
   return (
     <HomeContainer 
       topRatedMovies={topRatedMovies}
       popularMovies={popularMovies}
+      categories={categories}
       selectedCategory={{
         id: params.category?.[0] ?? '',
-        movies: selectedCategory ? Movies.results.slice(0,7) : []
+        movies: selectedCategory ? selectedCategory.slice(0,7) : []
       }}
     />
   )

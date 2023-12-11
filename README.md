@@ -21,7 +21,7 @@ You will need [Node.js](https://nodejs.org) version 8.0 or greater installed on 
 Get the code by either cloning this repository using git
 
 ```
-git clone https://github.com/omersarisoy/b2metric.git
+git clone https://github.com/omersarisoy/next-movieApp.git
 ```
 
 ... or [downloading source code](https://github.com/omersarisoy/next-movieApp/archive/refs/heads/main.zip) code as a zip archive.
